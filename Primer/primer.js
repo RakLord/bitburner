@@ -11,25 +11,8 @@ export async function main(ns) {
 	ns.print(`MinSecLvl: ${minSecLvl}`);
 	ns.print(`CurSecLvl: ${ns.getServerSecurityLevel(target)}`);
 
-	
-
-	// var serversSeen = ns.scan("home");
-	// var currentScan;
-	// for (let i = 0; i < serversSeen.length; i++) {
-	// 	currentScan = ns.scan(serversSeen[i])
-	// 	for (var j = 0; j < currentScan.length; j++) {
-	// 		if (serversSeen.indexOf(currentScan[j]) === -1) {
-	// 			var curServ = currentScan[j];
-	// 			if (ns.hasRootAccess(curServ)) {
-	// 				serversSeen.push(curServ);
-	// 			}
-	// 		}
-	// 	}
-	// }
-	
 	var serversSeen = ns.getPurchasedServers(); 
 	serversSeen.push("home");
-
 
 	function calcAvailThreads() {
 		var availThreads = 0;
@@ -90,7 +73,6 @@ export async function main(ns) {
 			} 
 		}
 		
-
 		if (ns.getServerSecurityLevel(target) <= minSecLvl && ns.getServerMoneyAvailable(target) > maxMoney * targetMoneyPercentage) {
 			primed = true;
 			ns.print(`PRIMED TARGET: ${target}`);
