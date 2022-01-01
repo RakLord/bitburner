@@ -6,7 +6,7 @@ export async function main(ns) {
 		target = ns.args[0];
 	} else 	target = "foodnstuff";
 
-	var hackScript = "vuln_server.js";
+	var hackScript = "/old_hak/vuln_server.js";
 
 	var serversSeen = ns.scan("home");
 	var currentScan;

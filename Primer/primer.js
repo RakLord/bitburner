@@ -80,8 +80,7 @@ export async function main(ns) {
 			ns.exit();
 		}
 
-		ns.print(`Threads remaining: ${availableThreads}`);
-		ns.print(`Priming duration: ${ns.getWeakenTime(target) + 30}ms`);
+		ns.print(`Priming duration: ${ns.nFormat((ns.getWeakenTime(target) + 30) / 1000 , "00:00:00")}`);
 		await ns.sleep(ns.getWeakenTime(target) + 30);
 	} 
 }

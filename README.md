@@ -8,7 +8,7 @@ Please copy/paste all the scripts inside `base` to your home server, after doing
 
 ## Primer 
 
-The primer script takes a single arg (target server hostname) and will use the scripts from `base` to grow/weaken servers to be ready for use with a hacking script.
+The primer script takes a single arg (target server hostname) and will use the scripts from `base` (after you run `distribute_scripts.js`) to grow/weaken servers to be ready for use with a hacking script.
 
 
 ## Will add more info later
