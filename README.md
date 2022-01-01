@@ -2,6 +2,7 @@
  
 
 ## Info
+Stuff might not work since i restructured the code/file structure. Gimme time to fix
 Please copy/paste all the scripts inside `base` to your home server, after doing so run `distribute_scripts.js` to setup for usage with other scripts in this repo.
 
 
