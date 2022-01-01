@@ -3,7 +3,6 @@ export async function main(ns) {
 	ns.disableLog("ALL");
 	var target = ns.args[0];
 	var WGHScriptSize = 1.8;
-
 	var minSecLvl = ns.getServerMinSecurityLevel(target) + 1;
 	var secLvlMaxInc = 10;
 	var maxMoney = ns.getServerMaxMoney(target);
@@ -11,6 +10,8 @@ export async function main(ns) {
 
 	ns.print(`MinSecLvl: ${minSecLvl}`);
 	ns.print(`CurSecLvl: ${ns.getServerSecurityLevel(target)}`);
+
+	
 
 	// var serversSeen = ns.scan("home");
 	// var currentScan;
@@ -28,6 +29,7 @@ export async function main(ns) {
 	
 	var serversSeen = ns.getPurchasedServers(); 
 	serversSeen.push("home");
+
 
 	function calcAvailThreads() {
 		var availThreads = 0;
@@ -56,12 +58,14 @@ export async function main(ns) {
 		for (let i = 0; i < serversSeen.length; i++) {
 			var curServ = serversSeen[i];
 			var servRam = ns.getServerMaxRam(curServ);
-			var servUsableThreads = Math.floor(servRam / WGHScriptSize);
+			var servUsableThreads = Math.floor(servRam / WGHScriptSize) - 1;
 			if (servUsableThreads > 0) {
 				if (growThreads - servUsableThreads > 0) {
+					ns.print(`Running with: ${servUsableThreads} on ${curServ}`);
 					ns.exec("grow.js", curServ, servUsableThreads, target);
 					growThreads = growThreads - servUsableThreads;
 				} else if (growThreads > 0 && servUsableThreads) {
+					ns.print(`Running with: ${servUsableThreads} on ${curServ}`);
 					ns.exec("grow.js", curServ, growThreads, target);
 					growThreads = growThreads - growThreads;
 				} else {
@@ -70,16 +74,20 @@ export async function main(ns) {
 			}
 		}
 		ns.print(`Grow Threads Remainder: ${growThreads}`)
+		ns.print(`Threads remaining: ${availableThreads}`);
 
 		// Execute weaken threads
 		for (let i = 0; i < serversSeen.length; i++) {
 			var curServ = serversSeen[i];
 			var servRam = ns.getServerMaxRam(curServ);
-			var servUsableThreads = Math.floor(servRam / WGHScriptSize);
+			var servUsableThreads = Math.floor(servRam / WGHScriptSize) - 1;
+			ns.print(`ServUsableThreads: ${servUsableThreads}`);
 			if (servUsableThreads > 0) {
+				ns.print(`Running with: ${servUsableThreads} on ${curServ}`);
+				ns.print(`${servUsableThreads} | ${servRam / WGHScriptSize}`)
 				ns.exec("weak.js", curServ, servUsableThreads, target);
 				availableThreads = availableThreads - servUsableThreads;
-			}
+			} 
 		}
 		
 
@@ -89,6 +97,8 @@ export async function main(ns) {
 			ns.tprint(`PRIMED TARGET: ${target}`);
 			ns.exit();
 		}
+
+		ns.print(`Threads remaining: ${availableThreads}`);
 		ns.print(`Priming duration: ${ns.getWeakenTime(target) + 30}ms`);
 		await ns.sleep(ns.getWeakenTime(target) + 30);
 	} 
