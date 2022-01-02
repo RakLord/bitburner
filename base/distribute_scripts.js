@@ -13,8 +13,8 @@ export async function main(ns) {
 	}
 	ns.tprint(serversSeen);
 	for (let i = 0; i < serversSeen.length; i++) {
-		await ns.scp("weak.js", "home", serversSeen[i]);
-		await ns.scp("grow.js", "home", serversSeen[i]);
-		await ns.scp("hack.js", "home", serversSeen[i]);
+		await ns.scp("/base/weak.js", "home", serversSeen[i]);
+		await ns.scp("/base/grow.js", "home", serversSeen[i]);
+		await ns.scp("/base/hack.js", "home", serversSeen[i]);
 	}
 }

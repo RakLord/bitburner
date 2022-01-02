@@ -45,11 +45,11 @@ export async function main(ns) {
 			if (servUsableThreads > 0) {
 				if (growThreads - servUsableThreads > 0) {
 					ns.print(`Running with: ${servUsableThreads} on ${curServ}`);
-					ns.exec("grow.js", curServ, servUsableThreads, target);
+					ns.exec("base/grow.js", curServ, servUsableThreads, target);
 					growThreads = growThreads - servUsableThreads;
 				} else if (growThreads > 0 && servUsableThreads) {
 					ns.print(`Running with: ${servUsableThreads} on ${curServ}`);
-					ns.exec("grow.js", curServ, growThreads, target);
+					ns.exec("base/grow.js", curServ, growThreads, target);
 					growThreads = growThreads - growThreads;
 				} else {
 					break;
@@ -68,7 +68,7 @@ export async function main(ns) {
 			if (servUsableThreads > 0) {
 				ns.print(`Running with: ${servUsableThreads} on ${curServ}`);
 				ns.print(`${servUsableThreads} | ${servRam / WGHScriptSize}`)
-				ns.exec("weak.js", curServ, servUsableThreads, target);
+				ns.exec("base/weak.js", curServ, servUsableThreads, target);
 				availableThreads = availableThreads - servUsableThreads;
 			} 
 		}
