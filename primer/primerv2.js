@@ -104,6 +104,6 @@ export async function main(ns) {
 		// 	ns.exit();
 		// }
 
-		await ns.sleep(500);
+		await ns.sleep(1000);
 	} 
 }
