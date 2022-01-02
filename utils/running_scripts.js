@@ -38,14 +38,19 @@ export async function main(ns) {
 				}
 			}
 
-			var maxLen = 42;
+			var maxLen = 52;
 			var attackingStr = attacking.toString();
-			var outStr = "[" + servName.toString() + "] Attacking: ";
+			if (attackingStr == "none") {
+				var outStr = "ERROR    |  [" + servName.toString() + "] Attacking: ";
+			} else {
+				var outStr = "SUCCESS  |  [" + servName.toString() + "] Attacking: ";
+			}
+			
 			var startStr = outStr + attackingStr;
 			var strLen = maxLen - startStr.length;
 
 			var fillStr = new Array(strLen + 1).join(" ");
-			ns.tprint(outStr + fillStr + attackingStr);
+			ns.tprintf(outStr + fillStr + attackingStr);
 		}
 	})
 }

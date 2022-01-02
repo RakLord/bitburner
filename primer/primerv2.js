@@ -34,16 +34,12 @@ export async function main(ns) {
 		ns.print(`Grow time: ${ns.nFormat(growTime / 1000, "00:00:00")}`);
 		ns.print(`End delay: ${ns.nFormat(timeDif / 1000, "00:00:00")}`);
 
-
-
-		
 		if (weakThreads > 0) {
 			for (let i = 0; i < pservCount; i++) {
 				var curServ = serversSeen[i];
 				ns.exec("weak.js", curServ, distributedWeakThreads, target);
 			}
 		}
-
 
 		await ns.sleep(timeDif);
 		if (growThreads > 0) {
