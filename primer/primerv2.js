@@ -23,15 +23,15 @@ export async function main(ns) {
 		var growTime = ns.getGrowTime(target);
 		var timeDif = weakTime - growTime - 100;  // calculate time gap between launches (+ 100ms error room) 
 		// var distributedWeakThreads = Math.ceil(weakThreads / pservCount);
-		// var distributedGrowThreads = Math.ceil(growThreads / pservCount);
+		var distributedGrowThreads = Math.ceil(growThreads / pservCount);
 
-		
+
 		ns.print(`Available threads: ${availableThreads}`);
 		ns.print(`Weak threads: ${weakThreads}`);
 		ns.print(`Grow threads: ${growThreads}`);
 		ns.print(`Growth ratio: ${growRatio}`);
 		// ns.print(`Dist weak threads: ${distributedWeakThreads}`);
-		// ns.print(`Dist grow threads: ${distributedGrowThreads}`);
+		ns.print(`Dist grow threads: ${distributedGrowThreads}`);
 		ns.print(`Weak time: ${ns.nFormat(weakTime / 1000, "00:00:00")}`);
 		ns.print(`Grow time: ${ns.nFormat(growTime / 1000, "00:00:00")}`);
 		ns.print(`End delay: ${ns.nFormat(timeDif / 1000, "00:00:00")}`);
@@ -48,7 +48,7 @@ export async function main(ns) {
 		if (growThreads > 0) {
 			for (let i = 0; i < pservCount; i++) {
 				var curServ = serversSeen[i];
-				ns.exec("grow.js", curServ, growThreads, target);
+				ns.exec("grow.js", curServ, distributedGrowThreads, target);
 			}
 		}
 
@@ -60,6 +60,6 @@ export async function main(ns) {
 			ns.exit();
 		}
 
-		await ns.sleep(100);
+		await ns.sleep(growTime + 50);
 	} 
 }
