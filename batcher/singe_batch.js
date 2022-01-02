@@ -5,7 +5,7 @@ export async function main(ns) {
 	var WGScriptSize = 1.8;
 	var minSecLvl = ns.getServerMinSecurityLevel(target);
 	var maxMoney = ns.getServerMaxMoney(target);
-	var targetMoneyPercentage = 0.1;
+	var targetMoneyPercentage = 0.2;
 	var serversSeen = ns.getPurchasedServers(); 
 	var securityThresh = minSecLvl;
 
@@ -24,15 +24,17 @@ export async function main(ns) {
 	var pservCount = serversSeen.length;
 	var availableThreads = Math.floor((ns.getServerMaxRam(serversSeen[0]) - ns.getServerUsedRam(serversSeen[0])) / WGScriptSize);  // threads per server (derived from executed script size)
 	// var weakThreads = Math.ceil((ns.getServerSecurityLevel(target) - securityThresh) / 0.05); // Threads required to weaken to reach the security threshold
-	var weakThreads = Math.ceil((100 - securityThresh) / 0.05);  // Calc how many threads required to weaken from max (NOT OPTIMAL THREAD USAGE (just temporrary))
-	var growRatio = maxMoney / (ns.getServerMoneyAvailable(target) - 1);  // the ratio that grow analyze uses to see how many threads to reach max money on a server.
+	var weakThreads = Math.ceil((minSecLvl + 15 - securityThresh) / 0.05);  // Calc how many threads required to weaken from max (NOT OPTIMAL THREAD USAGE (just temporrary))
+	var growRatio = 1 / (1 - targetMoneyPercentage); 
 	var growThreads = ns.growthAnalyze(target, growRatio);
 	
 	var weakTime = ns.getWeakenTime(target);  
-	var hackTime = ns.getHackTime(target);
-	var growTime = ns.getGrowTime(target);
-	var timeDif = weakTime - growTime - 250;  // calculate time gap between launches (+ 250ms error room) 
-	var weakOffset = 250; // offset of time bewtteen W's in WGW cycle
+	var hackTime = weakTime * 0.25; // 4 hacks per 1 weaken timer
+	var growTime = weakTime * 0.8;  // Default bitnode grow rate
+	var timeDif = weakTime - growTime; 
+	var delay = 300; 
+	var finishGrow = weakTime - delay;
+	var finishHack = weakTime - (delay * 2);
 	var hackOffset = weakTime - timeDif - hackTime;
 	var distributedWeakThreads = Math.ceil(weakThreads / pservCount);
 	var distributedGrowThreads = Math.ceil(growThreads / pservCount);
@@ -73,7 +75,7 @@ export async function main(ns) {
 	if (growThreads > 0) {
 		for (let i = 0; i < pservCount; i++) {
 			var curServ = serversSeen[i];
-			ns.exec("base/grow.js", curServ, distributedGrowThreads, target, timeDif, randomArg);
+			ns.exec("base/grow.js", curServ, distributedGrowThreads, target, weakTime - timeDif, randomArg);
 		}
 	}
 
@@ -81,8 +83,7 @@ export async function main(ns) {
 	if (hackThreads > 0) {
 		for (let i = 0; i < pservCount; i++) {
 			var curServ = serversSeen[i];
-			ns.exec("base/hack.js", curServ, distributedHackThreads, target, hackOffset - 250, randomArg);
+			ns.exec("base/hack.js", curServ, distributedHackThreads, target, hackOffset, randomArg);
 		}
 	}
-
 }

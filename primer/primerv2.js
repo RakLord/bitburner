@@ -12,22 +12,6 @@ export async function main(ns) {
 	ns.print(`MinSecLvl: ${minSecLvl}`);
 	ns.print(`CurSecLvl: ${ns.getServerSecurityLevel(target)}`);
 
-	if (ns.getServerMoneyAvailable(target) < maxMoney) {
-		ns.tprintf(`ERROR PRIME SERVER FIRST`);
-		ns.print(`PRIME SERVER FIRST`);
-		randomArg = Math.random();
-
-		for (let i = 0; i < serversSeen.length; i++) {
-			var curServ = serversSeen[i];
-			ns.exec("grow.js", curServ, 50, target, randomArg);
-		}
-		var hackThreads = ns.hackAnalyzeThreads(target, maxMoney-1);
-
-
-	} else {
-		var hackThreads = ns.hackAnalyzeThreads(target, maxMoney-1);
-	}
-
 	var primed = false;
 	while (!primed) {
 		var pservCount = serversSeen.length;
@@ -37,7 +21,7 @@ export async function main(ns) {
 		var growThreads = ns.growthAnalyze(target, growRatio);  
 		var weakTime = ns.getWeakenTime(target);  
 		var growTime = ns.getGrowTime(target);
-		var timeDif = weakTime - growTime - 250;  // calculate time gap between launches (+ 15ms error room) 
+		var timeDif = weakTime - growTime;  // calculate time gap between launches (+ 15ms error room) 
 		var weakOffset = 250; // offset of time bewtteen W's in WGW cycle
 		var distributedWeakThreads = Math.ceil(weakThreads / pservCount);
 		var distributedGrowThreads = Math.ceil(growThreads / pservCount);
@@ -64,7 +48,7 @@ export async function main(ns) {
 		if (weakThreads > 0) { //  run another 
 			for (let i = 0; i < pservCount; i++) {
 				var curServ = serversSeen[i];
-				ns.exec("base/weak.js", curServ, distributedWeakThreads, target, timeDif - weakOffset, randomArg);
+				ns.exec("base/weak.js", curServ, distributedWeakThreads, target, timeDif, randomArg);
 			}
 		}
 
@@ -72,10 +56,9 @@ export async function main(ns) {
 		if (growThreads > 0) {
 			for (let i = 0; i < pservCount; i++) {
 				var curServ = serversSeen[i];
-				ns.exec("base/grow.js", curServ, distributedGrowThreads, target, timeDif, randomArg);
+				ns.exec("base/grow.js", curServ, distributedGrowThreads, target, weakTime - timeDif, randomArg);
 			}
 		}
-
 
 		if (ns.getServerSecurityLevel(target) <= securityThresh && ns.getServerMoneyAvailable(target) > maxMoney * targetMoneyPercentage) {
 			primed = true;
