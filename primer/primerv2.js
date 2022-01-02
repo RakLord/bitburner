@@ -15,29 +15,32 @@ export async function main(ns) {
 	var primed = false;
 	while (!primed) {
 		var pservCount = serversSeen.length;
-		var availableThreads = Math.floor((ns.getServerMaxRam(serversSeen[0]) - ns.getServerUsedRam(serversSeen[0])) / WGScriptSize);
-		var weakThreads = Math.ceil((ns.getServerSecurityLevel(target) - securityThresh) / 0.05);
-		var growRatio = maxMoney / ns.getServerMoneyAvailable(target);
-		var growThreads = ns.growthAnalyze(target, growRatio);
-		var weakTime = ns.getWeakenTime(target);
+		var availableThreads = Math.floor((ns.getServerMaxRam(serversSeen[0]) - ns.getServerUsedRam(serversSeen[0])) / WGScriptSize);  // threads per server (derived from executed script size)
+		var weakThreads = Math.ceil((ns.getServerSecurityLevel(target) - securityThresh) / 0.05); // Threads required to weaken to reach the security threshold
+		var growRatio = maxMoney / ns.getServerMoneyAvailable(target);  // the ratio that grow analyze uses to see how many threads to reach max money on a server.
+		var growThreads = ns.growthAnalyze(target, growRatio);  // DOESNT FUCKING WORK AS I EXPECTED????
+		var weakTime = ns.getWeakenTime(target);  
 		var growTime = ns.getGrowTime(target);
-		var timeDif = weakTime - growTime - 100;
-		var distributedWeakThreads = Math.ceil(weakThreads * pservCount);
-		var distributedGrowThreads = Math.ceil(growThreads * pservCount);
+		var timeDif = weakTime - growTime - 100;  // calculate time gap between launches (+ 100ms error room) 
+		// var distributedWeakThreads = Math.ceil(weakThreads / pservCount);
+		// var distributedGrowThreads = Math.ceil(growThreads / pservCount);
+
+		
 		ns.print(`Available threads: ${availableThreads}`);
 		ns.print(`Weak threads: ${weakThreads}`);
-		ns.print(`Growth ratio: ${growRatio}`);
 		ns.print(`Grow threads: ${growThreads}`);
-		ns.print(`Dist weak threads: ${distributedWeakThreads}`);
-		ns.print(`Dist grow threads: ${distributedGrowThreads}`);
+		ns.print(`Growth ratio: ${growRatio}`);
+		// ns.print(`Dist weak threads: ${distributedWeakThreads}`);
+		// ns.print(`Dist grow threads: ${distributedGrowThreads}`);
 		ns.print(`Weak time: ${ns.nFormat(weakTime / 1000, "00:00:00")}`);
 		ns.print(`Grow time: ${ns.nFormat(growTime / 1000, "00:00:00")}`);
 		ns.print(`End delay: ${ns.nFormat(timeDif / 1000, "00:00:00")}`);
+		
 
 		if (weakThreads > 0) {
 			for (let i = 0; i < pservCount; i++) {
 				var curServ = serversSeen[i];
-				ns.exec("weak.js", curServ, distributedWeakThreads, target);
+				ns.exec("weak.js", curServ, weakThreads, target);
 			}
 		}
 
@@ -45,7 +48,7 @@ export async function main(ns) {
 		if (growThreads > 0) {
 			for (let i = 0; i < pservCount; i++) {
 				var curServ = serversSeen[i];
-				ns.exec("grow.js", curServ, distributedGrowThreads, target);
+				ns.exec("grow.js", curServ, growThreads, target);
 			}
 		}
 
