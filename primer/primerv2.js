@@ -22,16 +22,19 @@ export async function main(ns) {
 		var weakTime = ns.getWeakenTime(target);
 		var growTime = ns.getGrowTime(target);
 		var timeDif = weakTime - growTime - 100;
+		var distributedWeakThreads = Math.ceil(weakThreads * pservCount);
+		var distributedGrowThreads = Math.ceil(growThreads * pservCount);
 		ns.print(`Available threads: ${availableThreads}`);
 		ns.print(`Weak threads: ${weakThreads}`);
 		ns.print(`Growth ratio: ${growRatio}`);
 		ns.print(`Grow threads: ${growThreads}`);
+		ns.print(`Dist weak threads: ${distributedWeakThreads}`);
+		ns.print(`Dist grow threads: ${distributedGrowThreads}`);
 		ns.print(`Weak time: ${ns.nFormat(weakTime / 1000, "00:00:00")}`);
 		ns.print(`Grow time: ${ns.nFormat(growTime / 1000, "00:00:00")}`);
 		ns.print(`End delay: ${ns.nFormat(timeDif / 1000, "00:00:00")}`);
 
-		var distributedWeakThreads = Math.ceil(weakThreads / pservCount);
-		var distributedGrowThreads = Math.ceil(growThreads / pservCount);
+
 
 		
 		if (weakThreads > 0) {
