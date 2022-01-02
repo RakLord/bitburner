@@ -10,7 +10,7 @@ export async function main(ns) {
 		ns.print("Sec Lvl: " + ns.getServerSecurityLevel(target));
 		ns.print("Min Sec Lvl: " + ns.getServerMinSecurityLevel(target));
 		ns.print(" ");
-		await ns.sleep(5000);
+		await ns.sleep(500);
 	}
 
 }

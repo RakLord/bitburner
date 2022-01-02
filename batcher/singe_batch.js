@@ -5,7 +5,7 @@ export async function main(ns) {
 	var WGScriptSize = 1.8;
 	var minSecLvl = ns.getServerMinSecurityLevel(target);
 	var maxMoney = ns.getServerMaxMoney(target);
-	var targetMoneyPercentage = 0.95;
+	var targetMoneyPercentage = 0.1;
 	var serversSeen = ns.getPurchasedServers(); 
 	var securityThresh = minSecLvl;
 
@@ -15,29 +15,23 @@ export async function main(ns) {
 	if (ns.getServerMoneyAvailable(target) < maxMoney) {
 		ns.tprintf(`ERROR PRIME SERVER FIRST`);
 		ns.print(`PRIME SERVER FIRST`);
-		randomArg = Math.random();
-
-		for (let i = 0; i < serversSeen.length; i++) {
-			var curServ = serversSeen[i];
-			ns.exec("grow.js", curServ, 50, target, randomArg);
-		}
-		var hackThreads = ns.hackAnalyzeThreads(target, maxMoney-1);
-
-
+		ns.exit();
 	} else {
-		var hackThreads = ns.hackAnalyzeThreads(target, maxMoney-1);
+		var hackValue =  maxMoney * targetMoneyPercentage
+		var hackThreads = ns.hackAnalyzeThreads(target, hackValue);
 	}
 
 	var pservCount = serversSeen.length;
 	var availableThreads = Math.floor((ns.getServerMaxRam(serversSeen[0]) - ns.getServerUsedRam(serversSeen[0])) / WGScriptSize);  // threads per server (derived from executed script size)
-	var weakThreads = Math.ceil((ns.getServerSecurityLevel(target) - securityThresh) / 0.05); // Threads required to weaken to reach the security threshold
+	// var weakThreads = Math.ceil((ns.getServerSecurityLevel(target) - securityThresh) / 0.05); // Threads required to weaken to reach the security threshold
+	var weakThreads = Math.ceil((100 - securityThresh) / 0.05);  // Calc how many threads required to weaken from max (NOT OPTIMAL THREAD USAGE (just temporrary))
 	var growRatio = maxMoney / (ns.getServerMoneyAvailable(target) - 1);  // the ratio that grow analyze uses to see how many threads to reach max money on a server.
-	var growThreads = ns.growthAnalyze(target, growRatio);  // DOESNT FUCKING WORK AS I EXPECTED????
+	var growThreads = ns.growthAnalyze(target, growRatio);
 	
 	var weakTime = ns.getWeakenTime(target);  
 	var hackTime = ns.getHackTime(target);
 	var growTime = ns.getGrowTime(target);
-	var timeDif = weakTime - growTime - 250;  // calculate time gap between launches (+ 15ms error room) 
+	var timeDif = weakTime - growTime - 250;  // calculate time gap between launches (+ 250ms error room) 
 	var weakOffset = 250; // offset of time bewtteen W's in WGW cycle
 	var hackOffset = weakTime - timeDif - hackTime;
 	var distributedWeakThreads = Math.ceil(weakThreads / pservCount);
@@ -46,6 +40,7 @@ export async function main(ns) {
 
 
 	ns.print(`Available threads: ${availableThreads}`);
+	ns.print(`Hacking for: ${hackValue}`);
 	ns.print(`Weak threads: ${weakThreads}`);
 	ns.print(`Grow threads: ${growThreads}`);
 	ns.print(`Hack threads: ${hackThreads}`);
@@ -70,7 +65,7 @@ export async function main(ns) {
 	if (weakThreads > 0) { //  run another 
 		for (let i = 0; i < pservCount; i++) {
 			var curServ = serversSeen[i];
-			ns.exec("base/weak.js", curServ, distributedWeakThreads, target, weakOffset, randomArg);
+			ns.exec("base/weak.js", curServ, distributedWeakThreads, target, timeDif, randomArg);
 		}
 	}
 

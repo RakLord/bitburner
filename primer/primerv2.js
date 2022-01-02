@@ -64,7 +64,7 @@ export async function main(ns) {
 		if (weakThreads > 0) { //  run another 
 			for (let i = 0; i < pservCount; i++) {
 				var curServ = serversSeen[i];
-				ns.exec("base/weak.js", curServ, distributedWeakThreads, target, weakOffset, randomArg);
+				ns.exec("base/weak.js", curServ, distributedWeakThreads, target, timeDif - weakOffset, randomArg);
 			}
 		}
 
