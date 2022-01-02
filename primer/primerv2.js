@@ -21,8 +21,8 @@ export async function main(ns) {
 		var growThreads = ns.growthAnalyze(target, growRatio);  
 		var weakTime = ns.getWeakenTime(target);  
 		var growTime = ns.getGrowTime(target);
-		var timeDif = weakTime - growTime;  // calculate time gap between launches (+ 15ms error room) 
-		var weakOffset = 250; // offset of time bewtteen W's in WGW cycle
+		var timeBuffer = 50;
+		var growDelay = weakTime - growTime - timeBuffer
 		var distributedWeakThreads = Math.ceil(weakThreads / pservCount);
 		var distributedGrowThreads = Math.ceil(growThreads / pservCount);
 
@@ -34,7 +34,6 @@ export async function main(ns) {
 		ns.print(`Dist grow threads: ${distributedGrowThreads}`);
 		ns.print(`Weak time: ${ns.nFormat(weakTime / 1000, "00:00:00")}`);
 		ns.print(`Grow time: ${ns.nFormat(growTime / 1000, "00:00:00")}`);
-		ns.print(`End delay: ${ns.nFormat(timeDif / 1000, "00:00:00")}`);
 
 		var randomArg = Math.random();
 		if (weakThreads > 0) {  // Initial weak distribution
@@ -48,7 +47,7 @@ export async function main(ns) {
 		if (weakThreads > 0) { //  run another 
 			for (let i = 0; i < pservCount; i++) {
 				var curServ = serversSeen[i];
-				ns.exec("base/weak.js", curServ, distributedWeakThreads, target, timeDif, randomArg);
+				ns.exec("base/weak.js", curServ, distributedWeakThreads, target, timeBuffer, randomArg);
 			}
 		}
 
@@ -56,7 +55,7 @@ export async function main(ns) {
 		if (growThreads > 0) {
 			for (let i = 0; i < pservCount; i++) {
 				var curServ = serversSeen[i];
-				ns.exec("base/grow.js", curServ, distributedGrowThreads, target, weakTime - timeDif, randomArg);
+				ns.exec("base/grow.js", curServ, distributedGrowThreads, target, growDelay, randomArg);
 			}
 		}
 
