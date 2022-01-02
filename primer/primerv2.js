@@ -12,14 +12,30 @@ export async function main(ns) {
 	ns.print(`MinSecLvl: ${minSecLvl}`);
 	ns.print(`CurSecLvl: ${ns.getServerSecurityLevel(target)}`);
 
+	if (ns.getServerMoneyAvailable(target) < maxMoney) {
+		ns.tprintf(`ERROR PRIME SERVER FIRST`);
+		ns.print(`PRIME SERVER FIRST`);
+		randomArg = Math.random();
+
+		for (let i = 0; i < serversSeen.length; i++) {
+			var curServ = serversSeen[i];
+			ns.exec("grow.js", curServ, 50, target, randomArg);
+		}
+		var hackThreads = ns.hackAnalyzeThreads(target, maxMoney-1);
+
+
+	} else {
+		var hackThreads = ns.hackAnalyzeThreads(target, maxMoney-1);
+	}
+
 	var primed = false;
 	while (!primed) {
 		var pservCount = serversSeen.length;
 		var availableThreads = Math.floor((ns.getServerMaxRam(serversSeen[0]) - ns.getServerUsedRam(serversSeen[0])) / WGScriptSize);  // threads per server (derived from executed script size)
 		var weakThreads = Math.ceil((ns.getServerSecurityLevel(target) - securityThresh) / 0.05); // Threads required to weaken to reach the security threshold
-		var growRatio = maxMoney / (ns.getServerMoneyAvailable(target) + 1);  // the ratio that grow analyze uses to see how many threads to reach max money on a server.
+		var growRatio = maxMoney / (ns.getServerMoneyAvailable(target) - 1);  // the ratio that grow analyze uses to see how many threads to reach max money on a server.
 		var growThreads = ns.growthAnalyze(target, growRatio);  // DOESNT FUCKING WORK AS I EXPECTED????
-		var hackThreads = ns.hackAnalyzeThreads(target, maxMoney);
+		
 		var weakTime = ns.getWeakenTime(target);  
 		var hackTime = ns.getHackTime(target);
 		var growTime = ns.getGrowTime(target);
