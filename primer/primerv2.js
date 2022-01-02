@@ -7,13 +7,10 @@ export async function main(ns) {
 	var maxMoney = ns.getServerMaxMoney(target);
 	var targetMoneyPercentage = 0.95;
 	var serversSeen = ns.getPurchasedServers(); 
-	var securityThresh = minSecLvl + 5;
+	var securityThresh = minSecLvl;
 
 	ns.print(`MinSecLvl: ${minSecLvl}`);
 	ns.print(`CurSecLvl: ${ns.getServerSecurityLevel(target)}`);
-
-	
-
 
 	var primed = false;
 	while (!primed) {
@@ -54,15 +51,13 @@ export async function main(ns) {
 		}
 
 
-		
-
 		if (ns.getServerSecurityLevel(target) <= securityThresh && ns.getServerMoneyAvailable(target) > maxMoney * targetMoneyPercentage) {
 			primed = true;
-			ns.print(`PRIMED TARGET: ${target}`);
-			ns.tprint(`PRIMED TARGET: ${target}`);
+			ns.print(`SUCCESS  || PRIMED TARGET: ${target}`);
+			ns.tprintf(`SUCCESS  || PRIMED TARGET: ${target}`);
 			ns.exit();
 		}
 
-		await ns.sleep(1000);
+		await ns.sleep(100);
 	} 
 }
