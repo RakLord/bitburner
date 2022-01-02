@@ -1,4 +1,3 @@
-//rak_hak.js
 export async function main(ns) {
 	ns.disableLog("ALL");
 	var serversSeen = ns.scan("home");
