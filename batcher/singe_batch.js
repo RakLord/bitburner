@@ -31,11 +31,13 @@ export async function main(ns) {
 	var weakTime = ns.getWeakenTime(target);  
 	var hackTime = weakTime * 0.25; // 4 hacks per 1 weaken timer
 	var growTime = weakTime * 0.8;  // Default bitnode grow rate
-	var timeDif = weakTime - growTime; 
-	var delay = 300; 
-	var finishGrow = weakTime - delay;
-	var finishHack = weakTime - (delay * 2);
-	var hackOffset = weakTime - timeDif - hackTime;
+
+	var timeDelay = 250;
+	var hackDelay = weakTime - hackTime - timeDelay * 3;
+	var weak1Delay = 0;
+	var growDelay = weakTime - growTime - timeDelay;
+	var weak2Delay = timeDelay * 2;
+
 	var distributedWeakThreads = Math.ceil(weakThreads / pservCount);
 	var distributedGrowThreads = Math.ceil(growThreads / pservCount);
 	var distributedHackThreads = Math.ceil(hackThreads / pservCount);
@@ -53,37 +55,15 @@ export async function main(ns) {
 	ns.print(`Weak time: ${ns.nFormat(weakTime / 1000, "00:00:00")}`);
 	ns.print(`Grow time: ${ns.nFormat(growTime / 1000, "00:00:00")}`);
 	ns.print(`Hack time: ${ns.nFormat(hackTime / 1000, "00:00:00")}`);
-	ns.print(`End delay: ${ns.nFormat(timeDif / 1000, "00:00:00")}`);
 
 	var randomArg = Math.random();
 	if (weakThreads > 0) {  // Initial weak distribution
 		for (let i = 0; i < pservCount; i++) {
 			var curServ = serversSeen[i];
-			ns.exec("base/weak.js", curServ, distributedWeakThreads, target, 0, randomArg);
-		}
-	}
-
-	randomArg = Math.random();
-	if (weakThreads > 0) { //  run another 
-		for (let i = 0; i < pservCount; i++) {
-			var curServ = serversSeen[i];
-			ns.exec("base/weak.js", curServ, distributedWeakThreads, target, timeDif, randomArg);
-		}
-	}
-
-	randomArg = Math.random();
-	if (growThreads > 0) {
-		for (let i = 0; i < pservCount; i++) {
-			var curServ = serversSeen[i];
-			ns.exec("base/grow.js", curServ, distributedGrowThreads, target, weakTime - timeDif, randomArg);
-		}
-	}
-
-	randomArg = Math.random();
-	if (hackThreads > 0) {
-		for (let i = 0; i < pservCount; i++) {
-			var curServ = serversSeen[i];
-			ns.exec("base/hack.js", curServ, distributedHackThreads, target, hackOffset, randomArg);
+			ns.exec("base/weak.js", curServ, distributedWeakThreads, target, weak1Delay, randomArg);
+			ns.exec("base/weak.js", curServ, distributedWeakThreads, target, weak2Delay, randomArg);
+			ns.exec("base/hack.js", curServ, distributedHackThreads, target, hackDelay, randomArg);
+			ns.exec("base/grow.js", curServ, distributedGrowThreads, target, growDelay, randomArg);
 		}
 	}
 }
