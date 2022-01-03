@@ -2,11 +2,18 @@
 export async function main(ns) {
 	// ns.disableLog("ALL");
 	var target = ns.args[0];
-    const batches = 150; // EDIT THIS VALUE TO CHANGE THE BATCH COUNT ( check pserv ram usage to see if u can use more)
+    var keepOpen = ns.args[1];
+    var HWGWSize = 2.8 * 4;
+    var batches = ns.getServerMaxRam(ns.getPurchasedServers()[0]) / HWGWSize;
 
+    ns.tprintf(`Starting ${batches} batches...`)
     for (let i = 0; i < batches; i++) {
         ns.tprintf(`SUCCESS Batch started ${i}`);
         ns.run("batcher/singe_batch.js", 1, target, i);
         await ns.sleep(500);
+    }
+
+    while (keepOpen) {
+        await ns.sleep(1000000); // keeps batch manager open as such u can see the income in the active scripts tab
     }
 }

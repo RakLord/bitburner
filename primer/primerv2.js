@@ -17,7 +17,7 @@ export async function main(ns) {
 
 	var weakThreads = (100 / 0.05); // Threads required to weaken to reach the security threshold
 	var growRatio = maxMoney / (ns.getServerMoneyAvailable(target) + 1);  // the ratio that grow analyze uses to see how many threads to reach max money on a server.
-	var growThreads = ns.growthAnalyze(target, growRatio);  
+	var growThreads = Math.ceil(ns.growthAnalyze(target, growRatio) * 1.05);  
 
 	var weakTime = ns.getWeakenTime(target);  
 	var growTime = weakTime * 0.8;  // Default bitnode grow rate

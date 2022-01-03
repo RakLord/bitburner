@@ -26,7 +26,7 @@ export async function main(ns) {
 	// var weakThreads = Math.ceil((ns.getServerSecurityLevel(target) - securityThresh) / 0.05); // Threads required to weaken to reach the security threshold
 	var weakThreads = Math.ceil((minSecLvl + 15 - securityThresh) / 0.05);  // Calc how many threads required to weaken from max (NOT OPTIMAL THREAD USAGE (just temporrary))
 	var growRatio = 1 / (1 - targetMoneyPercentage); 
-	var growThreads = ns.growthAnalyze(target, growRatio);
+	var growThreads = Math.ceil(ns.growthAnalyze(target, growRatio) * 1.15);
 	
 	var weakTime = ns.getWeakenTime(target);  
 	var hackTime = weakTime * 0.25; // 4 hacks per 1 weaken timer
