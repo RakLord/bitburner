@@ -1,4 +1,6 @@
 /** @param {NS} ns **/
+
+// was meant to be called single_batch.js but i guess this works too
 export async function main(ns) {
 	ns.disableLog("ALL");
 	var target = ns.args[0];
