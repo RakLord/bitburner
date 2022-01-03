@@ -16,7 +16,7 @@ export async function main(ns) {
 	var availableThreads = Math.floor((ns.getServerMaxRam(serversSeen[0]) - ns.getServerUsedRam(serversSeen[0])) / WGScriptSize);  // threads per server (derived from executed script size)  // Calc how many threads required to weaken from max (NOT OPTIMAL THREAD USAGE (just temporrary))
 
 	var weakThreads = (100 / 0.05); // Threads required to weaken to reach the security threshold
-	var growRatio = maxMoney / (ns.getServerMoneyAvailable(target) + 1);  // the ratio that grow analyze uses to see how many threads to reach max money on a server.
+	var growRatio = maxMoney / (ns.getServerMoneyAvailable(target) - 1);  // the ratio that grow analyze uses to see how many threads to reach max money on a server.
 	var growThreads = Math.ceil(ns.growthAnalyze(target, growRatio) * 1.05);  
 
 	var weakTime = ns.getWeakenTime(target);  

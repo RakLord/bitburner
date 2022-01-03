@@ -7,11 +7,11 @@ export async function main(ns) {
 	var WGScriptSize = 1.8;
 	var minSecLvl = ns.getServerMinSecurityLevel(target);
 	var maxMoney = ns.getServerMaxMoney(target);
-	var targetMoneyPercentage = 0.90;
+	var targetMoneyPercentage = 0.95;
 	var serversSeen = ns.getPurchasedServers(); 
 	var securityThresh = minSecLvl;
 
-	ns.print(`MinSecLvl: ${minSecLvl}`);
+	ns.print(`MinSecLvl: ${minSecLvl}`);	
 	ns.print(`CurSecLvl: ${ns.getServerSecurityLevel(target)}`);
 
 	if (ns.getServerMoneyAvailable(target) < (maxMoney * 0.9)) {
