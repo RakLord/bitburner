@@ -3,9 +3,6 @@ export async function main(ns) {
 	// ns.disableLog("ALL");
 	var target = ns.args[0];
     var keepOpen = ns.args[1];
-    var HWGWSize = 2.8 * 4;
-    // var batches = ns.getServerMaxRam(ns.getPurchasedServers()[0]) / HWGWSize;
-    // var batches = 469; // max batches before timing goes fuky wuky
     var batches = 1000;
 
     ns.tprintf(`Starting ${batches} batches...`)
