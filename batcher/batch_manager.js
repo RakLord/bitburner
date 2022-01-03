@@ -6,13 +6,14 @@ export async function main(ns) {
     var HWGWSize = 2.8 * 4;
     // var batches = ns.getServerMaxRam(ns.getPurchasedServers()[0]) / HWGWSize;
     // var batches = 469; // max batches before timing goes fuky wuky
-    var batches = 100;
+    var batches = 1000;
 
     var batchdelay = 
     ns.tprintf(`Starting ${batches} batches...`)
     for (let i = 0; i < batches; i++) {
         ns.tprintf(`SUCCESS Batch started ${i}`);
         ns.run("batcher/singe_batch.js", 1, target, i);
+        await ns.sleep(0); // stop launch lag
     }
 
     while (keepOpen) {
