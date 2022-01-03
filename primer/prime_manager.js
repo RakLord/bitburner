@@ -2,10 +2,13 @@
 export async function main(ns) {
 	ns.disableLog("ALL");
 	var target = ns.args[0];
+    const batches = 10;
 
-    for (let i = 0; i < 5; i++) {
-        ns.run("/primer/primerv2.js", 1, target, Math.random());
+    for (let i = 0; i < batches; i++) {
+        ns.run("/primer/primerv2.js", 1, target, i);
+        await ns.sleep(200);
     }
+
     var primed = false;
 	while (!primed) {
         
