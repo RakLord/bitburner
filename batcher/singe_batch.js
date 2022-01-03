@@ -5,14 +5,14 @@ export async function main(ns) {
 	var WGScriptSize = 1.8;
 	var minSecLvl = ns.getServerMinSecurityLevel(target);
 	var maxMoney = ns.getServerMaxMoney(target);
-	var targetMoneyPercentage = 0.2;
+	var targetMoneyPercentage = 0.4;
 	var serversSeen = ns.getPurchasedServers(); 
 	var securityThresh = minSecLvl;
 
 	ns.print(`MinSecLvl: ${minSecLvl}`);
 	ns.print(`CurSecLvl: ${ns.getServerSecurityLevel(target)}`);
 
-	if (ns.getServerMoneyAvailable(target) < maxMoney) {
+	if (ns.getServerMoneyAvailable(target) < (maxMoney * 0.9)) {
 		ns.tprintf(`ERROR PRIME SERVER FIRST`);
 		ns.print(`PRIME SERVER FIRST`);
 		ns.exit();
