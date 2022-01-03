@@ -8,7 +8,6 @@ export async function main(ns) {
     // var batches = 469; // max batches before timing goes fuky wuky
     var batches = 1000;
 
-    var batchdelay = 
     ns.tprintf(`Starting ${batches} batches...`)
     for (let i = 0; i < batches; i++) {
         ns.tprintf(`SUCCESS Batch started ${i}`);
