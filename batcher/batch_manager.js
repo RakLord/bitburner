@@ -2,7 +2,7 @@
 export async function main(ns) {
 	// ns.disableLog("ALL");
 	var target = ns.args[0];
-    var batches = 1000;
+    var batches = 10000;
 
     var batchLoops = batches / 25 / 4 // batches / pservcount / 4 scripts
 
