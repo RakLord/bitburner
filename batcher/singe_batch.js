@@ -18,7 +18,7 @@ export async function main(ns) {
 		ns.exit();
 	} else {
 		var hackValue =  maxMoney * targetMoneyPercentage
-		var hackThreads = ns.hackAnalyzeThreads(target, hackValue);
+		var hackThreads = ns.hackAnalyzeThreads(target, Math.floor(hackValue));
 	}
 
 	var pservCount = serversSeen.length;
