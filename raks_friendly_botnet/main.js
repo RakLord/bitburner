@@ -1,5 +1,14 @@
 /** @param {NS} ns **/
+
+
 export async function main(ns) {
+    // Yoink
+    const sleep = (ms) => {
+        const ret = new Promise(resolve => setTimeout(resolve, ms));
+        ns.print(`sleep: Sleeping for ${Math.floor(ms)} milliseconds`);
+        return ret;
+    };
+
 	ns.disableLog("ALL");
 
 	let target = ns.args[0];
