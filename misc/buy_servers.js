@@ -11,6 +11,11 @@ export async function main(ns) {
 		totalCost = getServersCost(ram);
 		if (ns.getServerMoneyAvailable("home") > totalCost) {
 			ram = ram * 2;
+			if (ram >= 1048575){
+				ram = ram * 2; // ram is divided by 2 after so this is the max after
+				calculated = true;
+				break
+			}
 		} else {
 			calculated = true;
 			break

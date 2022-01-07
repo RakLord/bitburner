@@ -5,10 +5,8 @@ export async function main(ns) {
 	var WGScriptSize = 1.8;
 	var minSecLvl = ns.getServerMinSecurityLevel(target);
 	var maxMoney = ns.getServerMaxMoney(target);
-	var targetMoneyPercentage = 0.95;
 	var serversSeen = ns.getPurchasedServers(); 
-	var securityThresh = minSecLvl;
-
+	
 	ns.print(`MinSecLvl: ${minSecLvl}`);
 	ns.print(`CurSecLvl: ${ns.getServerSecurityLevel(target)}`);
 
@@ -30,19 +28,11 @@ export async function main(ns) {
 	var distributedWeakThreads = Math.ceil(weakThreads / pservCount);
 	var distributedGrowThreads = Math.ceil(growThreads / pservCount);
 
-	ns.print(`Available threads: ${availableThreads}`);
-	ns.print(`Weak threads: ${weakThreads}`);
-	ns.print(`Grow threads: ${growThreads}`);
-	ns.print(`Growth ratio: ${growRatio}`);
-	ns.print(`Dist weak threads: ${distributedWeakThreads}`);
-	ns.print(`Dist grow threads: ${distributedGrowThreads}`);
-	ns.print(`Weak time: ${ns.nFormat(weakTime / 1000, "00:00:00")}`);
-	ns.print(`Grow time: ${ns.nFormat(growTime / 1000, "00:00:00")}`);
-
 	var randomArg = Math.random();
 
 	for (let i = 0; i < pservCount; i++) {
-		var curServ = serversSeen[i];
+		let curServ = serversSeen[i];
+		ns.print(curServ);
 		ns.exec("base/weak.js", curServ, distributedWeakThreads, target, weak1Delay, randomArg);
 		ns.exec("base/weak.js", curServ, distributedWeakThreads, target, weak2Delay, randomArg);
 		ns.exec("base/grow.js", curServ, distributedGrowThreads, target, growDelay, randomArg);

@@ -2,10 +2,9 @@
 export async function main(ns) {
 	// ns.disableLog("ALL");
 	var target = ns.args[0];
-    var batches = 1001;
+    var batches = 100;
 
-    var batchLoops = batches / 25 / 4 // batches / pservcount / 4 scripts
-
+    var batchLoops = Math.ceil(batches / 25 / 4) // batches / pservcount / 4 scripts
     ns.tprintf(`Starting ${batches} batches...`)
     for (let i = 0; i < batchLoops; i++) {
         ns.tprintf(`SUCCESS Batches started ${i * 25 * 4}`);

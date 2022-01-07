@@ -7,9 +7,10 @@ export async function main(ns) {
 	var WGScriptSize = 1.8;
 	var minSecLvl = ns.getServerMinSecurityLevel(target);
 	var maxMoney = ns.getServerMaxMoney(target);
-	var targetMoneyPercentage = 0.95;
+	var targetMoneyPercentage = 0.9;
 	var serversSeen = ns.getPurchasedServers(); 
 	var securityThresh = minSecLvl;
+
 
 	ns.print(`MinSecLvl: ${minSecLvl}`);	
 	ns.print(`CurSecLvl: ${ns.getServerSecurityLevel(target)}`);
@@ -20,15 +21,15 @@ export async function main(ns) {
 		ns.exit();
 	} else {
 		var hackValue =  maxMoney * targetMoneyPercentage
-		var hackThreads = ns.hackAnalyzeThreads(target, Math.floor(hackValue));
+		var hackThreads = Math.floor(ns.hackAnalyzeThreads(target, Math.floor(hackValue)));
 	}
 
 	var pservCount = serversSeen.length;
 	var availableThreads = Math.floor((ns.getServerMaxRam(serversSeen[0]) - ns.getServerUsedRam(serversSeen[0])) / WGScriptSize);  // threads per server (derived from executed script size)
 	// var weakThreads = Math.ceil((ns.getServerSecurityLevel(target) - securityThresh) / 0.05); // Threads required to weaken to reach the security threshold
-	var weakThreads = Math.ceil((minSecLvl + 15 - securityThresh) / 0.05);  // Calc how many threads required to weaken from max (NOT OPTIMAL THREAD USAGE (just temporrary))
+	var weakThreads = Math.ceil((minSecLvl + 15 - securityThresh) / 0.05) * 1.1;  // Calc how many threads required to weaken from max (NOT OPTIMAL THREAD USAGE (just temporrary))
 	var growRatio = 1 / (1 - targetMoneyPercentage); 
-	var growThreads = Math.ceil(ns.growthAnalyze(target, growRatio) * 1.5);
+	var growThreads = Math.ceil(ns.growthAnalyze(target, growRatio) * 1.05);
 	
 	var weakTime = ns.getWeakenTime(target);  
 	var hackTime = weakTime * 0.25; // 4 hacks per 1 weaken timer
@@ -40,6 +41,7 @@ export async function main(ns) {
 	var growDelay = weakTime - growTime - timeDelay;
 	var weak2Delay = timeDelay * 2;
 
+	ns.tprint(`Weak: ${weakThreads} | Grow: ${growThreads} | Hack: ${hackThreads}`);
 	var randomArg = Math.random();
 	var delay = ns.args[1] * (4 * 25 * timeDelay); // Script count * pserv count * timeDelay
 	if (weakThreads > 0) {
