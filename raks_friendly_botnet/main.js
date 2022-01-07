@@ -1,6 +1,4 @@
 /** @param {NS} ns **/
-
-
 export async function main(ns) {
     // Yoink
     const sleep = (ms) => {
@@ -33,19 +31,24 @@ export async function main(ns) {
 	let growTime = weakTime * 0.8;  // Default bitnode grow rate
 
     // Time calculations for the batches, only adjust timeDelay
-    const timeDelay = 100; 
-	const hackDelay = weakTime - hackTime - timeDelay * 3;
-	const weak1Delay = 0;
-	const growDelay = weakTime - growTime - timeDelay;
-	const weak2Delay = timeDelay * 2;
-    
+    const baseTime = 100;
+    const delays = {
+        time: baseTime ,
+        hack: weakTime - hackTime - baseTime  * 3,
+        weak1: 0,
+        grow: weakTime - growTime - baseTime ,
+        weak2: baseTime * 2
+    }
+
+
+    ns.tprint(`Time: ${delays.time} | Hack: ${delays.hack} | Weak1: ${delays.weak1} | Grow: ${delays.grow} | Weak2: ${delays.weak2}`);
     // batch deployment function. scriptThreads array [weakThreads, hackThreads, growThreads]
     function deployBatch(hostServer, scriptThreads, targetServer) {
-        ns.exec("base/weak.js", hostServer, scriptThreads[0], targetServer, weak1Delay + delay);
-        ns.exec("base/weak.js", hostServer, scriptThreads[0], targetServer, weak2Delay + delay);
-        ns.exec("base/hack.js", hostServer, scriptThreads[1], targetServer, hackDelay + delay);
-        ns.exec("base/grow.js", hostServer, scriptThreads[2], targetServer, growDelay + delay);
-        delay += timeDelay * 4  // Offset the delay by the amount of scripts initiated, do this after EVERY deployBatch() call
+        ns.exec("base/weak.js", hostServer, scriptThreads[0], targetServer, delays.weak1 + delay);
+        ns.exec("base/weak.js", hostServer, scriptThreads[0], targetServer, delays.weak2 + delay);
+        ns.exec("base/hack.js", hostServer, scriptThreads[1], targetServer, delays.hack + delay);
+        ns.exec("base/grow.js", hostServer, scriptThreads[2], targetServer, delays.grow + delay);
+        delay += delays.time * 4  // Offset the delay by the amount of scripts initiated, do this after EVERY deployBatch() call
         ns.print(`Delay: ${delay}`);
     }
 
