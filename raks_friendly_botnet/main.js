@@ -36,12 +36,10 @@ export async function main(ns) {
         time: baseTime ,
         hack: weakTime - hackTime - baseTime  * 3,
         weak1: 0,
-        grow: weakTime - growTime - baseTime ,
+        grow: weakTime - growTime - baseTime,
         weak2: baseTime * 2
     }
 
-
-    ns.tprint(`Time: ${delays.time} | Hack: ${delays.hack} | Weak1: ${delays.weak1} | Grow: ${delays.grow} | Weak2: ${delays.weak2}`);
     // batch deployment function. scriptThreads array [weakThreads, hackThreads, growThreads]
     function deployBatch(hostServer, scriptThreads, targetServer) {
         ns.exec("base/weak.js", hostServer, scriptThreads[0], targetServer, delays.weak1 + delay);
