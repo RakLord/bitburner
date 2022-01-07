@@ -40,14 +40,14 @@ export async function main(ns) {
         weak2: baseTime * 2
     }
 
+
     // batch deployment function. scriptThreads array [weakThreads, hackThreads, growThreads]
-    function deployBatch(hostServer, scriptThreads, targetServer) {
-        ns.exec("base/weak.js", hostServer, scriptThreads[0], targetServer, delays.weak1 + delay);
+    function deployBatch(hostServer, scriptThreads, targetServer) {                                // OK BUT LIKE, I NEED TO HAVE A DELAY PER SERVER BRUH, OBJECT WITH TARGET + 
+        ns.exec("base/weak.js", hostServer, scriptThreads[0], targetServer, delays.weak1 + delay); // DELAY IS LOOOKING TO BE THE PLAY RN BOIS LETS GOO
         ns.exec("base/weak.js", hostServer, scriptThreads[0], targetServer, delays.weak2 + delay);
         ns.exec("base/hack.js", hostServer, scriptThreads[1], targetServer, delays.hack + delay);
         ns.exec("base/grow.js", hostServer, scriptThreads[2], targetServer, delays.grow + delay);
-        delay += delays.time * 4  // Offset the delay by the amount of scripts initiated, do this after EVERY deployBatch() call
-        ns.print(`Delay: ${delay}`);
+        delay += delays.time * 4  // Offset the delay by the amount of scripts initiated.
     }
 
     // batch size calculatio. scriptThreads array [weakThreads, hackThreads, growThreads]
@@ -56,8 +56,9 @@ export async function main(ns) {
         return batchRam;
     }
 
-    ns.print(calcBatchRam(new Array(10, 30, 20)));
 
-    deployBatch("home", new Array(1, 1, 1), "n00dles");
-    deployBatch("home", new Array(1, 1, 1), "n00dles");
+    for (var i = 0; i < 10; i++) {
+        deployBatch("home", new Array(1, 1, 1), "n00dles");
+    }
+    
 }
