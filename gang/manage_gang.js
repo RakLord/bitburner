@@ -39,7 +39,7 @@ export async function main(ns) {
     }
 
     function recruit() {
-        if (ns.gang.getMemberNames().length > names.length) {
+        if (ns.gang.getMemberNames().length < names.length) {
             ns.tprintf(`SUCCESS | Gang full`);
         } else {
             ns.gang.recruitMember(names[ns.gang.getMemberNames().length + 1]);
