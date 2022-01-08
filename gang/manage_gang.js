@@ -12,7 +12,7 @@ export async function main(ns) {
     const maxMoneyPercent = 0.01; // Max % of money to use when buying
     const ascendThreshold = 1.3;  // DECIDE VALUE SOON
     const maxAscendMulti = 25;
-    const names = [`A`, `B`, `C`, `D`, `E`, `F`, `G`, `H`, `I`, `K`, `L`, `M`, `N`, `O`, `P`];
+    const names = [`A`, `B`, `C`, `D`, `E`, `F`, `G`, `H`, `I`, `K`, `L`, `M`];
 
     // List of tasks we are going to use
     const tasks = {
@@ -34,14 +34,13 @@ export async function main(ns) {
     while (true) {
         recruit();
         ascend(); 
-        buyGear();     
+        // buyGear();     
         await sleep(updateDelay);
     }
 
     function recruit() {
+        ns.print(`Gang Size: ${ns.gang.getMemberNames().length} / ${names.length}`)
         if (ns.gang.getMemberNames().length < names.length) {
-            ns.tprintf(`SUCCESS | Gang full`);
-        } else {
             ns.gang.recruitMember(names[ns.gang.getMemberNames().length + 1]);
         }
     }
@@ -69,8 +68,8 @@ export async function main(ns) {
      function buyGear() {
         let members = ns.gang.getMemberNames();
         // Weapon
-        for (let i = 0; i < members.length; i++) {
-            let member = members[i];
+        for (let x = 0; x < members.length; x++) {
+            let member = members[x];
             for (let i = 0; i < weaponOrder.length; i++) {
                 if (ns.gang.getEquipmentCost(weaponOrder[i]) < ns.getServerMoneyAvailable("home") * maxMoneyPercent) {
                     ns.gang.purchaseEquipment(member, weaponOrder[i]);
@@ -79,8 +78,8 @@ export async function main(ns) {
             }
         }
         // Armor
-        for (let i = 0; i < members.length; i++) {
-            let member = members[i];
+        for (let x = 0; x < members.length; x++) {
+            let member = members[x];
             for (let i = 0; i < armorOrder.length; i++) {
                 if (ns.gang.getEquipmentCost(armorOrder[i]) < ns.getServerMoneyAvailable("home") * maxMoneyPercent) {
                     ns.gang.purchaseEquipment(member, armorOrder[i]);
@@ -89,8 +88,8 @@ export async function main(ns) {
             }
         }
         // Vehicle
-        for (let i = 0; i < members.length; i++) {
-            let member = members[i];
+        for (let x = 0; x < members.length; x++) {
+            let member = members[x];
             for (let i = 0; i < vehicleOrder.length; i++) {
                 if (ns.gang.getEquipmentCost(vehicleOrder[i]) < ns.getServerMoneyAvailable("home") * maxMoneyPercent) {
                     ns.gang.purchaseEquipment(member, vehicleOrder[i]);
